@@ -4,7 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +37,34 @@ public class DashboardActivity extends AppCompatActivity {
         list = makeData();
         Log.d("TEST", "list size : " + list.size());
 
-        MainAdapter myAdapter = new MainAdapter(DashboardActivity.this, list);
+        final MainAdapter myAdapter = new MainAdapter(DashboardActivity.this, list);
         lv.setAdapter(myAdapter);
 
-        //1. 정적입니다. 
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("TEST", "click floating action button");
+                // List에 데이터를 추가를 하는 것
+                Item item = new Item("title" + list.size(), "content" + list.size());
+                list.add(item);
+                Log.d("TEST", "current list size => " + list.size());
+                //리스트뷰를 갱신을 해줘야 함
+                //리스트뷰에 담긴 데이터는 어뎁터...
+                //어댑터를 갱신을 해줘야함
+                myAdapter.notifyDataSetChanged();
+            }
+        });
 
     }
+
+//    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+//        @Override
+//        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//            Toast.makeText(DashboardActivity.this,
+//                    "current pos" + position, Toast.LENGTH_SHORT).show();
+//        }
+//    };
 
     private List<Item> makeData() {
         // 데이터를 생성합니다.
