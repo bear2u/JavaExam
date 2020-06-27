@@ -2,6 +2,7 @@ package pe.kr.kth.test;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
     int count = 0;
     String expectedId = "test";
     String expectedPwd = "1234";
+
+//    EditText etId;
+//    EditText etPwd;
 
     EditText etId, etPwd;
 
@@ -55,9 +59,23 @@ public class MainActivity extends AppCompatActivity {
                        }
                    }
                } catch (Exception e) {
-                   Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                   Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                   e.printStackTrace();
                } finally {
                    Log.d("TEST", "current status => " + status);
+                   //로그인 성공 되고 화면 이동
+                   //DashboardActivity 로 이동
+                   // 화면 이동시 intent를 통해서 이동이 가능합니다.
+                   // 조건이 로그인이 성공됐을 경우!!
+                   if(status == LoginStatus.SUCCESS) {
+                       Intent intent = new Intent(MainActivity.this,
+                               DashboardActivity.class);
+//                       startActivity(intent);
+                       MainActivity.this.startActivity(intent);
+                   } else {
+                       Toast.makeText(MainActivity.this, "로그인 오류", Toast.LENGTH_SHORT).show();
+                   }
+
                }
             }
         });
