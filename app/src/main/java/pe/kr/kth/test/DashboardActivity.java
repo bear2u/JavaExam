@@ -2,6 +2,7 @@ package pe.kr.kth.test;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,15 +20,11 @@ import pe.kr.kth.test.data.Item;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    //1. ListView View 생성 -> 완료
-    //2. ListView 바인딩 -> 바인딩
-    //3. Data 클래스 생성 -> 완료
-    //4. ListView Adapter 생성
-    //5. ListView에 Adapter 연결
-    //6. ListView에 클릭 이벤트 추가
-
     ListView lv;
     List<Item> list;
+
+    OnListViewItemClickListener onListViewItemClickListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +34,25 @@ public class DashboardActivity extends AppCompatActivity {
         list = makeData();
         Log.d("TEST", "list size : " + list.size());
 
-        final MainAdapter myAdapter = new MainAdapter(DashboardActivity.this, list);
+        final MainAdapter myAdapter = new MainAdapter(
+                DashboardActivity.this,
+                list,
+                new OnListViewItemClickListener() {
+                    @Override
+                    public void onListViewClicked(int pos) {
+                        Intent intent = new Intent(
+                                DashboardActivity.this,
+                                DetailActivity.class
+                        );
+                        //Detail Acitivity에 값을 넘겨주면 됨
+                        Item item = list.get(pos);
+//                        intent.putExtra("title", item.title);
+//                        intent.putExtra("content", item.content);
+                        intent.putExtra("item", item);
+                        startActivity(intent);
+                    }
+                }
+        );
         lv.setAdapter(myAdapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -46,7 +61,7 @@ public class DashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("TEST", "click floating action button");
                 // List에 데이터를 추가를 하는 것
-                Item item = new Item("title" + list.size(), "content" + list.size());
+                Item item = new Item(list.size(), "title" + list.size(), "content" + list.size());
                 list.add(item);
                 Log.d("TEST", "current list size => " + list.size());
                 //리스트뷰를 갱신을 해줘야 함
@@ -57,6 +72,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
     }
+
 
 //    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
 //        @Override
@@ -72,7 +88,10 @@ public class DashboardActivity extends AppCompatActivity {
         //반복문을 사용해서 여러개의 아이템을 추가
         List list = new ArrayList<Item>();
         for (int i=0;i<10;i++) {
-            Item item = new Item("title" + i, "content" + i);
+            Item item = new Item(
+                    i,
+                    "title" + i,
+                    "content" + i);
             list.add(item);
         }
         return list;
